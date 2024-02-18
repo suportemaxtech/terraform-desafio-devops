@@ -1,0 +1,1 @@
+EStamos [0] aprendendo o terraform utilizando
