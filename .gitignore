@@ -126,6 +126,8 @@ $RECYCLE.BIN/
 *.msix
 *.msm
 *.msp
+# ssh
+ssh
 
 # Windows shortcuts
 *.lnk
