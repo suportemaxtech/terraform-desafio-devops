@@ -1,3 +1,4 @@
+#Aula-07
 variable "estados" {
   type = list(string)
   default    =  [

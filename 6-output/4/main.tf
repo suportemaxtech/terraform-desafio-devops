@@ -1,3 +1,4 @@
+#Aula-07
 variable "cliente" {
   type = map(string)
   default    =  {

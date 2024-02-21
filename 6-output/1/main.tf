@@ -1,3 +1,4 @@
+#Aula-07
 variable "nome" {
   type = string
   description    =  "Digite seu nome"

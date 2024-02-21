@@ -1,3 +1,4 @@
+#Aula-07
 variable "senha" {
   type = string
   sensitive = true 

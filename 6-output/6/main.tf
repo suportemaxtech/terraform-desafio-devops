@@ -1,3 +1,4 @@
+#Aula-07
 variable "clientes" {
   type = list(
     object({
