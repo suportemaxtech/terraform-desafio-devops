@@ -1,14 +1,44 @@
+#aula 10
 variable "nomes" {
-  type = map(any)
-  default = {
+  type = list
+  default = [
+    {
+      "nome"   = "Primeira",
+      "subnet" = "subnet_a1"
+    },
 
-    "Primeira" : "subnet_a1",
-    "Segunda"  : "subnet_b1",
-    "Terceira" : "subnet_c1",
-    "Quarta"   : "subnet_c1",
-  }
+    {
+      "nome"   = "Segunda",
+      "subnet" = "subnet_b1"
+    },
 
+    {
+      "nome"   = "Terceira",
+      "subnet" = "subnet_c1"
+    },
+  ]
 }
+
+variable "subnets" {
+  type = map
+  default = {
+    "subnet_a1" = {
+      "zona" = "us-east-1a",
+      "cdir" = "10.0.64.0/18"
+    },
+
+    "subnet_b1" = {
+      "zona" = "us-east-1b",
+      "cdir" = "10.0.128.0/18"
+    },
+
+    "subnet_c1" = {
+      "zona" = "us-east-1c",
+      "cdir" = "10.0.192.0/18"
+    }
+  }
+}
+
 
 variable "instance_type" {
   type        = string

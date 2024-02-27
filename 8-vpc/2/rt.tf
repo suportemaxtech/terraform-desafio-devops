@@ -1,14 +1,14 @@
-#Aula-09
+#Aula-10
 resource "aws_route_table" "rt_desafio_devops" {
-    vpc_id = aws_vpc.vpc_desafio_devops.id
+  vpc_id = aws_vpc.vpc_desafio_devops.id
 
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.gw.id
-    }
-    
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw.id
+  }
+
   tags = {
-    Name = "rt_desafio_devops"
+    "Name" = "rt_desafio_devops"
   }
 }
 

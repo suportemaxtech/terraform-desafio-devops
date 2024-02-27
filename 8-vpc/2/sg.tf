@@ -1,7 +1,8 @@
+#Aula-10
 resource "aws_security_group" "exercicio_libera_ssh" {
   name        = "exercicio_libera_ssh_desafio_devops"
   description = "Libera a porta 22 para as maquinas criadas no desafio devops"
-  vpc_id = aws_vpc.vpc_desafio_devops
+  vpc_id      = aws_vpc.vpc_desafio_devops.id
   #array lista de dados liberação das saidas
   egress = [
     {
