@@ -35,7 +35,7 @@ variable "subnets" {
     "subnet_c1" = {
       "zona" = "us-east-1c",
       "cdir" = "10.0.192.0/18"
-    }
+    },
   }
 }
 
