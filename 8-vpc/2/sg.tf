@@ -38,6 +38,22 @@ resource "aws_security_group" "exercicio_libera_ssh" {
       prefix_list_ids  = null
       security_groups  = null
       self             = null
+    },
+
+        {
+      # portas 22
+      from_port = 3050
+
+      to_port = 3050
+
+      protocol = "tcp"
+      #array lista de blocos
+      cidr_blocks      = ["0.0.0.0/0"] #qualquer um pode acessar
+      ipv6_cidr_blocks = ["::/0"]      #qualquer um pode acessar
+      description      = "leberacao geral de fora para dentro"
+      prefix_list_ids  = null
+      security_groups  = null
+      self             = null
     }
   ]
 }
