@@ -11,6 +11,6 @@ resource "aws_instance" "vm" {
 
 
   tags = {
-    Name = "Maquina_para_ansible" #nome da maquina
+    Name = "maquina_ansible" #nome da maquina
   }
 }

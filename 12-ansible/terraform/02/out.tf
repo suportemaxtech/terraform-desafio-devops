@@ -6,3 +6,4 @@ output "informacoes_vms" {
 
 }
 
+
