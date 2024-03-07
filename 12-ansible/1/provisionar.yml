@@ -1,8 +1,6 @@
 - hosts:
 - maquina_ansible
-name: "criando arquivo"
-
-
+-name: "criando arquivo"
 tasks:
 - name: "Renomear maquina"
 shell: hostname "maquina_ansible" && echo "maquina_ansible" > /etchostname
