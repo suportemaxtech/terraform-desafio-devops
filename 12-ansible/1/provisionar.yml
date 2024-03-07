@@ -1,15 +1,15 @@
 - hosts:
-  - maquina_ansible
-  name: "criando arquivo"
+- maquina_ansible
+name: "criando arquivo"
 
 
-   tasks:
-      - name: "Renomear maquina"
-         shell: hostname "maquina_ansible" && echo "maquina_ansible" > /etc/hostname
-     become: yes # roda e cria como sudo
+tasks:
+- name: "Renomear maquina"
+shell: hostname "maquina_ansible" && echo "maquina_ansible" > /etchostname
+become: yes # roda e cria como sudo
 
-       - name: "criando arquivo"
-       shell: echo"teste de criação" > teste.txt
+- name: "criando arquivo"
+shell: echo"teste de criação" > teste.txt
 
     #rodando o ansible
     # ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key ../../ssh/id_rca
