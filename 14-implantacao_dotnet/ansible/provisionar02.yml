@@ -1,0 +1,20 @@
+- hosts:
+  - maquina_wordpress   
+  tasks:
+    - name: "Renomear maquina"
+      shell: hostname "maquina_wordpress" && echo "maquina_wordpress" > /etc/hostname
+      become: yes # roda e cria como sudo
+
+    - name: "criando arquivo"
+      shell: echo "teste de criação" >> teste.txt
+    - name: "Criando o arquivo e mantendo estado"
+      copy:
+        content: "teste max"
+        dest: "home/ubuntu/mais_um_arquivo_com_estado.txt"
+        backup: yes
+        owner: ubuntu
+        group: ubuntu
+        mode: 400
+
+    #rodando o ansible
+    # ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key ../../ssh/id_rca

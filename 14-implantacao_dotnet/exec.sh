@@ -15,11 +15,11 @@ DNS=$(echo $DNS | sed "s/\"//g")
 # DNS=(${ANSIBLE_RETORNO//=/}) #usando o split para pegar o dns
 # DNS=${DNS[1]} # #pegando o index de 1
 
-cd ../1 # entrar no diretorio do ansibel
+cd ../ansible # entrar no diretorio do ansibel
 
 #Criando o arquivo de hosts
 echo " 
-[maquina_wordpress]
+[dotnet]
 $DNS"> hosts
 
  # para evitar o fingprint do ssh  ocolocar variavel de ambiente antes para  o yes do ssh

@@ -1,0 +1,114 @@
+- hosts:
+  - maquina_wordpress 
+
+  # restartar o apache
+  handlers:
+    - name: "restart apache"  
+      service:
+        name: apache2
+        state: restarted
+      become: yes
+
+  tasks:
+    - name: "Renomear maquina"
+      shell: hostname "maquina_wordpress" && echo "maquina_wordpress" > /etc/hostname
+      become: yes # roda e cria como sudo
+
+    - name: "Roda sudo apt update"
+      become: yes
+      apt:
+        update: yes
+        upgrade_cache: yes
+
+    - name: "Instala pacotes em lote"
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - php7.4
+        - apache2
+        - libapache2-mod-php7.4
+        - php-mysql
+        - php-curl
+        - mysql-server
+        - python3-pycurl
+        - python3-
+        - unzip
+
+
+    - name: "Fazendo o download do wordpress"
+      get_url:
+        url: "https://br.wordpress.org/latest-pt_BR.zip"
+        dest: "/home/ubuntu/latest-pt_BR.zip"
+
+
+    - name: "Fazendo a descompactação do wordpress"
+      unarchive:
+        src: "/home/ubuntu/latest-pt_BR.zip"
+        dest: "/var/www"
+        remote_src: yes # para indicar que a pasta src é do servidor remoto
+      become: yes
+
+    - name: "Copia arquivo WP"
+      copy:
+        src: "/var/www/wordpress/wp-config-sample.php"
+        dest: "/var/www/wordpress/wp-config.php"
+        remote_src: yes # para indicar que a pasta src é do servidorremoto
+      become: yes
+
+    - name: "Configuração do wp-config com user e senha do banco de dados"
+      replace:
+        path: "/var/www/wordpress/wp-config.php"
+        regexp: "{{ item.regex }}"
+        replace: "{{ item.value }}"
+      with_items:
+        - { regex: 'nome_do_banco_de_dados_aqui', value: 'banco_wordpress' }
+        - { regex: 'nome_de_usuario', value: 'root' }
+        - { regex: 'senha_aqui', value: 'root' }
+      become: yes
+
+    - name: "Trocando a pasta do render do apache para wordpress"
+      copy:
+        src: "apache/000-default.conf"
+        dest: "/etc/apache2/sites-available/000-default.conf"
+      become: yes
+      notify: # serviço de handlers para reiniciar o apache
+        - "restart apache"
+
+    - name: "Levanta serviço do mysql"  
+      service:
+        name: mysql
+        state: started
+      become: yes
+
+    - name: "Criação da senha de root do mysql"
+      ignore_errors: yes
+      become: yes
+      mysql_user:
+        name: root
+        host: localhost
+        password: root
+        priv: "*.*:ALL,GRANT" # dando permissão geral para o usuario
+        state: present
+
+    - name: "Criar banco de dados mysql"
+      mysql_db:
+        name: banco_wordpress
+        login_user: root
+        login_password: root
+        state: present
+
+      # debug para ver se o se o aquivo esta correto
+    - shell: cat "/var/www/wordpress/wp-config.php"
+      register: ps 
+    - debug:
+        msg: "{{ ps.stdout_line }}"
+
+
+
+      
+ 
+
+    #rodando o ansible
+    # ansible-playbook -i hosts provisionar.yml -u ubuntu --private-key ../../ssh/id_rca
