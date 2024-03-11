@@ -1,6 +1,6 @@
 resource "aws_instance" "vm" {
   ami                         = "ami-0c7217cdde317cfec"
-  instance_type               = "t2.medium"
+  instance_type               = "t2.micro"
   associate_public_ip_address = true
   subnet_id = "subnet-02802464d275b9e57"
 
@@ -11,6 +11,6 @@ resource "aws_instance" "vm" {
 
 
   tags = {
-    Name = "maquina_ansible" #nome da maquina
+    Name = "maquina_wordpress" #nome da maquina
   }
 }
