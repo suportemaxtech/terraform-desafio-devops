@@ -1,0 +1,62 @@
+- hosts:
+  - java 
+
+  # restartar o apache
+  handlers:
+    - name: "restart nginx"  
+      service:
+        name: nginx
+        state: restarted
+      become: yes
+
+  tasks:
+    - name: "Renomear maquina"
+      shell: hostname "dotenet" && echo "java" > /etc/hostname
+      become: yes # roda e cria como sudo
+
+    - name: "Roda sudo apt update"
+      become: yes
+      apt:
+        update: yes
+        upgrade_cache: yes
+        cache_valid_time: 86400 # um dia
+
+    - name: "Instala pacotes em lote"
+        apt:
+          name: "{{ item }}"
+          state: latest
+        become: yes
+        with_items:
+          - nginx
+          - default-jdk
+          - mysql-server
+          - python3-pycurl
+          - python3-mysqldb
+          - maven
+         
+
+    - nome: "clone projeto"
+      ansible.builtin.git:
+        repo: 'https://github.com/torneseumprogramador/spring-web-youtube.git'
+        dest: /home/ubuntu/spring-web-youtube
+        clone: yes
+        update: yes
+
+    - name: Adicionar no bashrc
+      lineinfile: dest=~/.bashrc line='export USER=root' state=present
+    - name: Adicionar no bashrc
+      lineinfile: dest=~/.bashrc line='export PASSWORD:root' state=present
+    - name: Adicionar no bashrc
+      lineinfile: dest=~/.bashrc line='export DATABASE_URL=mysql://localhost:3306/SpringWebYoutube?createDatabaseIfNotExist=true&useTimezone=true&server=UTC' state=present
+
+    - name: Aplicar o bashrc
+      shell: source ~/.bashrc
+      args:
+        executable: /bin/bash
+
+    - name: "fazendo o build do projeto"
+      shell: "cd spring-web-youtube && mvn package"
+    
+    
+    - name: "Startando VPS"
+      shell: "cd spring-web-youtube && nohup java -jar target/&"
