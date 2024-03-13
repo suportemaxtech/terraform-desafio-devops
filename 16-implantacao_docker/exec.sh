@@ -5,17 +5,19 @@ terraform init
 terraform apply -auto-approve
 
 echo "Esperando a máquina carregar"
-sleep 20 # espera
 
-ANSIBLE_RETORNO=$(terraform output)
-DNS=(${ANSIBLE_RETORNO//=/ })
-DNS=${DNS[1]}
+sleep 20 # espera
+DNS=$(terraform output public_dns)
 DNS=$(echo $DNS | sed -e "s/\"//g")
+
+export RDS=$(terraform output rds)
+RDS=$(echo $RDS | sed -e "s/\"//g")
+
 
 cd ../ansible 
 
 echo " 
-[java]
+[java-api-docker]
 $DNS
 " > hosts
 

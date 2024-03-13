@@ -1,0 +1,95 @@
+- hosts:
+  - java-api-docker 
+  become: yes
+  # restartar o apache
+  handlers:
+    - name: "restart nginx"  
+      service:
+        name: nginx
+        state: restarted
+      
+
+  tasks:
+    - name: "Renomear maquina"
+      shell: hostname "dotenet" && echo "java-api-docker " > /etc/hostname
+       # roda e cria como sudo
+
+    - name: "Roda sudo apt update"
+      
+      apt:
+        update: yes
+        upgrade_cache: yes
+        cache_valid_time: 86400 # um dia
+
+    - name: "Instala pacotes em lote"
+      apt:
+        name: "{{ item }}"
+        state: latest
+      
+      with_items:
+        - nginx
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gpg-agent
+        - software-properties-common
+
+
+    - name: add docker GPG key
+      
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: add docker apt repo
+    
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable 
+        state: present
+
+    - name: install docker
+    
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - container.io
+    
+
+    - name: Adicionar no bashrc
+      lineinfile: dest=~/.bashrc line='export USER=root' state=present
+    - name: Adicionar no bashrc
+      lineinfile: dest=~/.bashrc line='export PASSWORD:root' state=present
+    - name: Adicionar no bashrc
+      lineinfile: dest=~/.bashrc line='export DATABASE_URL="mysql://{{ lookup('env', 'RDS') }}/db_mysql_desafio?createDatabaseIfNotExist=true&useTimezone=true&server=UTC"' state=present
+
+    - name: Aplicar o bashrc
+      shell: source ~/.bashrc
+      args:
+        executable: /bin/bash
+
+       # baixando a imagem
+    - name: "baixar imagem do docker"
+      shell: docker pull didox/desafio_multiplasapis_java_empresas
+      
+
+      # criando o  container
+    - name: "Criando o container"
+      ignore_errors: yes
+      shell: docker run -d USER -e PASSWORD_URL -p 8080:8080 --name desafio_multiplasapis_java_empresas didox/desafio_multiplasapis_java_empresas
+
+      # start container
+    - name: "Criando o container"
+      ignore_errors: yes
+      shell: docker start didox/desafio_multiplasapis_java_empresas
+
+
+    - name: "Trocando a pasta  do nginx para VPS"
+      copy:
+        src: "nginx/default"
+        dest: "/etc/nginx/sites-available/default"
+      
+      notify: # serviço de handlers para reiniciar o apache
+        - "restart nginx"

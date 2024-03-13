@@ -47,7 +47,7 @@
     - name: Adicionar no bashrc
       lineinfile: dest=~/.bashrc line='export PASSWORD:root' state=present
     - name: Adicionar no bashrc
-      lineinfile: dest=~/.bashrc line='export DATABASE_URL=mysql://localhost:3306/SpringWebYoutube?createDatabaseIfNotExist=true&useTimezone=true&server=UTC' state=present
+      lineinfile: dest=~/.bashrc line='export DATABASE_URL="mysql://localhost:3306/SpringWebYoutube?createDatabaseIfNotExist=true&useTimezone=true&server=UTC"' state=present
 
     - name: Aplicar o bashrc
       shell: source ~/.bashrc
@@ -55,8 +55,39 @@
         executable: /bin/bash
 
     - name: "fazendo o build do projeto"
-      shell: "cd spring-web-youtube && mvn package"
+      shell: "cd spring-web-youtube && mvn package -Dmaven.test.skip -DskipTest -Dmaven.javadoc.skip=true"
     
     
     - name: "Startando VPS"
-      shell: "cd spring-web-youtube && nohup java -jar target/&"
+      shell: "cd spring-web-youtube && nohup java -jar target/SpringWeb-1.0.0.jar &"
+
+    - name: "Levanta serviço do mysql"  
+      service:
+        name: mysql
+        state: started
+      become: yes
+
+    - name: "Criação da senha de root do mysql"
+      ignore_errors: yes
+      become: yes
+      mysql_user:
+        name: root
+        host: localhost
+        password: root
+        priv: "*.*:ALL,GRANT" # dando permissão geral para o usuario
+        state: present
+
+    - name: "Criar banco de dados mysql"
+      mysql_db:
+        name: SpringWebYoutube
+        login_user: root
+        login_password: root
+        state: present
+
+    - name: "Trocando a pasta  do nginx para VPS"
+      copy:
+        src: "nginx/default"
+        dest: "/etc/nginx/sites-available/default"
+      become: yes
+      notify: # serviço de handlers para reiniciar o apache
+        - "restart nginx"
