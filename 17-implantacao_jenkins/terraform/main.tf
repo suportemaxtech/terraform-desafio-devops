@@ -7,8 +7,8 @@ data "http" "myip" {
 }
 
 resource "aws_key_pair" "chave_ssh_jenkins" {
-  key_name   = "chave_ssh_desafio_pub"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDFc7h5ycmymclma79v1DUbUimK/EIWO9o9sG+PxdTpZrKP6Mee1qdSLejoKiDDshrhvLTQQ2PAJD7xVZ/1hpWQNXzEZ224LDnPaBKq0lsmfaKbI7JX3Im5vAHk1AxIOIqOtb1oWqSCYptyTpifJDkEYZ/jmxgTJ37sw6noYLQy7EHBGNG8phjmsaceCQVTyWSld2kacGKCIM84SCS8/CizNspsV5O6au4zP+uftS42DdwZRfvTupNNZvGdfI7qmzw+3FtUpgP+o1l4SdG8hFid2ToUNMFtu4vC4TGQ8soh6ZAZIZUh6V53KJGSSwf0asuir1lxXvBm33W8/KaAcgTFtITiH6mCMIxKdXBeGOGkJ93XpIZywJK6mpr3mijc/tEiaiT48ibbPqqz3JFTyXndtLOS6fBLz9302fVr6sr+Sh7PGZfxKICq2YW6I00hsqb0Y5xJiBuMvB7gShYq+SD1p3kP1r8NR/oVvLoYrnCjAhA64JnPQ6CE5ZlJxziL18= maxxa@DESKTOP-6D617KR"
+  key_name   = "chave_ssh_desafiodevops_jenkins"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCfPo9Jfg91WGomDT4vrztzAEElMpKQfB7ZHvH12jRL5iNvLULrvRH0+AUMZnR9u+VBV6HYUhRqfmeicIZnaj/k6aE+lMVyu1lXzk3aiHvCOhqxs3hM7VhnV0hOiJR5N9QoUuHkM6z3JiL9xCS5Of0h/RIBwSn3Ga68+7LjApWCXUUh5rAP6AUEhaWkOMZqZHbGbyKcDrq9P24vbsETIb/frD/ZmQ/B2y/HQ1pIbDb2cqrkcpx61M77z7RloYzXEIN/fNrM3gjTC9tEZuoGb5LgGIfQrA17xdYc4QGL5Tt07sIgV2APVZHvDN49S8Nq5X4wwnfRaSJqVlyU8XiP/DxpjyhX9fOy6OEizmbmIM5xBem9AL2dPOzznclRvlxLIoUxeHWiKN69mWgBzEuvmBgDpDri79zFTZIczE/UGEMN55JmnZ7MRca0V+PE5ARVqUo7WIDVyUkqFLojz6lzoTyqU1JDYf2m1EE9Q0Y1BwAP+o5bEzV9FpIRP+LyPw+s/VE= max@DESKTOP-6D617KR"
 }
 
 resource "aws_instance" "jenkins" {
@@ -81,6 +81,6 @@ output "jenkins" {
     "private: ${aws_instance.jenkins.private_ip}",
     "public: ${aws_instance.jenkins.public_ip}",
     "public_dns: ${aws_instance.jenkins.public_dns}",
-    "ssh -i /c/Cursos/DevOps/terraform/ssh/id_rsa ubuntu@${aws_instance.jenkins.public_dns}"
+    "ssh -i /mnt/c/Cursos/DevOps/terraform/ssh3/id_rsa ubuntu@${aws_instance.jenkins.public_dns}"
   ]
 }
