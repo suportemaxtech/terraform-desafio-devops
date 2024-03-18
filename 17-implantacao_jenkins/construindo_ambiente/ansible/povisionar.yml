@@ -1,0 +1,29 @@
+- hosts:
+  - all
+  become: yes
+  handlers:
+    - name: "restart nginx"
+      service:
+        name: nginx
+        state: restarted
+  tasks:
+    - name: "Renomar maquina"
+      shell: hostname "java-validador-cpf" && echo "java-validador-cpf" > /etc/hostname
+
+    - name: "baixar imagem docker"
+      shell: docker pull didox/validador-cpf-java-turma-devops
+
+    - name: "Criando container"
+      ignore_errors: yes
+      shell: docker run -d -p 8080:8080 --name validador-cpf-java-turma-devops didox/validador-cpf-java-turma-devops
+
+    - name: "start container"
+      ignore_errors: yes
+      shell: docker start validador-cpf-java-turma-devops
+
+    - name: "Trocando nginx para VPS"
+      copy:
+        src: "nginx/default"
+        dest: "/etc/nginx/sites-available/default"
+      notify:
+        - "restart nginx"
